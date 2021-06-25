@@ -1,8 +1,13 @@
-// import Home from 'pages/Home';
-import NewRoom from 'pages/NewRoom';
+import { BrowserRouter as Router } from 'react-router-dom';
+
+import Routes from './routes';
 
 function App() {
-  return <NewRoom />;
+  return (
+    <Router>
+      <Routes />
+    </Router>
+  );
 }
 
 export default App;
