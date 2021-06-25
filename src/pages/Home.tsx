@@ -1,4 +1,7 @@
+import * as React from 'react';
 import { useHistory } from 'react-router-dom';
+
+import { AuthContext } from '../App';
 
 import illustrationImg from 'assets/images/illustration.svg';
 import logoImg from 'assets/images/logo.svg';
@@ -12,7 +15,13 @@ import 'styles/auth.scss';
 export default function Home() {
   const history = useHistory();
 
-  function navigateToNewRoom() {
+  const { user, signInWithGoogle } = React.useContext(AuthContext);
+
+  async function handleCreateRoom() {
+    if (!user) {
+      await signInWithGoogle();
+    }
+
     history.push('/rooms/new');
   }
 
@@ -33,7 +42,7 @@ export default function Home() {
           <Button
             type="button"
             className="create-room"
-            onClick={navigateToNewRoom}
+            onClick={handleCreateRoom}
           >
             <img src={googleIconImg} alt="Logo do Google" />
             Crie sua sala com o Google
