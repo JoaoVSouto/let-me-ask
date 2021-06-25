@@ -23,6 +23,28 @@ export const AuthContext = React.createContext<AuthContextData>(
 function App() {
   const [user, setUser] = React.useState<User>();
 
+  React.useEffect(() => {
+    const unsubscribeToAuthStateChange = auth.onAuthStateChanged(user => {
+      if (user) {
+        const { displayName, photoURL, uid } = user;
+
+        if (!displayName || !photoURL) {
+          throw new Error('Missing informtion from Google account.');
+        }
+
+        setUser({
+          id: uid,
+          name: displayName,
+          avatar: photoURL,
+        });
+      }
+    });
+
+    return () => {
+      unsubscribeToAuthStateChange();
+    };
+  }, []);
+
   async function signInWithGoogle() {
     const provider = new firebase.auth.GoogleAuthProvider();
 
