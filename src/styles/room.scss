@@ -64,7 +64,25 @@
       margin-top: 1rem;
     }
 
-    .form-footer span {
+    .form-footer .user-info {
+      display: flex;
+      align-items: center;
+    }
+
+    .form-footer .user-info img {
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+    }
+
+    .form-footer .user-info span {
+      margin-left: 0.5em;
+      color: #29292e;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .form-footer > span {
       font-size: 0.875rem;
       color: #737380;
       font-weight: 500;
