@@ -3,6 +3,8 @@ import { useHistory } from 'react-router-dom';
 
 import { firebase, database } from 'services/firebase';
 
+import { useAuth } from 'contexts/AuthContext';
+
 type FirebaseQuestions = Record<
   string,
   {
@@ -13,6 +15,12 @@ type FirebaseQuestions = Record<
     content: string;
     isAnswered: boolean;
     isHighlighted: boolean;
+    likes: Record<
+      string,
+      {
+        authorId: string;
+      }
+    >;
   }
 >;
 
@@ -25,10 +33,14 @@ type QuestionData = {
   content: string;
   isAnswered: boolean;
   isHighlighted: boolean;
+  likeCount: number;
+  likeId?: string;
 };
 
 export default function useRoom(roomId: string) {
   const history = useHistory();
+
+  const { user } = useAuth();
 
   const [questions, setQuestions] = React.useState<QuestionData[]>([]);
   const [title, setTitle] = React.useState('');
@@ -51,6 +63,10 @@ export default function useRoom(roomId: string) {
           author: value.author,
           isHighlighted: value.isHighlighted,
           isAnswered: value.isAnswered,
+          likeCount: Object.values(value.likes || {}).length,
+          likeId: Object.entries(value.likes || {}).find(
+            ([_, like]) => like.authorId === user?.id
+          )?.[0],
         })
       );
 
@@ -64,7 +80,7 @@ export default function useRoom(roomId: string) {
     return () => {
       roomRef.off('value', handleRoomValueChange);
     };
-  }, [history, roomId]);
+  }, [history, roomId, user?.id]);
 
   return {
     questions,
