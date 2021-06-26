@@ -36,5 +36,41 @@
       color: #737380;
       font-size: 0.875rem;
     }
+
+    button {
+      appearance: none;
+      border: 0;
+      background-color: transparent;
+
+      &:hover svg,
+      &:focus svg {
+        fill: #835afd;
+      }
+
+      &:hover svg path,
+      &:focus svg path {
+        stroke: #fff;
+      }
+    }
+
+    button svg,
+    button svg path {
+      transition: all 200ms ease-out;
+    }
+
+    .like-button {
+      display: flex;
+      align-items: flex-end;
+      color: #737380;
+      gap: 0.5rem;
+    }
+
+    .like-button.--liked {
+      color: #835afd;
+    }
+
+    .like-button.--liked svg path {
+      stroke: #835afd;
+    }
   }
 }
