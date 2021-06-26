@@ -1,6 +1,7 @@
 import logoImg from 'assets/images/logo.svg';
 
 import Button from 'components/Button';
+import RoomCode from 'components/RoomCode';
 
 import 'styles/room.scss';
 
@@ -11,7 +12,7 @@ export default function Room() {
         <div className="content">
           <img src={logoImg} alt="Let me ask" />
 
-          <div>codigo</div>
+          <RoomCode />
         </div>
       </header>
 
