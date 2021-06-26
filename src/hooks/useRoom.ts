@@ -49,7 +49,7 @@ export default function useRoom(roomId: string) {
     function handleRoomValueChange(room: firebase.database.DataSnapshot) {
       const roomData = room.val();
 
-      if (!roomData) {
+      if (!roomData || roomData?.endedAt) {
         history.push('/');
         return;
       }
