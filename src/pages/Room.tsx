@@ -78,7 +78,7 @@ export default function Room() {
     }
 
     const roomRef = database.ref(`rooms/${roomId}`);
-    roomRef.once('value', handleRoomValueChange);
+    roomRef.on('value', handleRoomValueChange);
 
     return () => {
       roomRef.off('value', handleRoomValueChange);
