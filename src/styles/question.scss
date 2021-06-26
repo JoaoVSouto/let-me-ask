@@ -47,6 +47,11 @@
         fill: #835afd;
       }
 
+      &:hover img,
+      &:focus img {
+        filter: brightness(0.6);
+      }
+
       &:hover svg path,
       &:focus svg path {
         stroke: #fff !important;
