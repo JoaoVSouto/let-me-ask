@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 
-import { database } from 'services/firebase';
+import { firebase, database } from 'services/firebase';
 
 import { useAuth } from 'contexts/AuthContext';
 
@@ -12,17 +12,78 @@ import RoomCode from 'components/RoomCode';
 
 import 'styles/room.scss';
 
+type FirebaseQuestions = Record<
+  string,
+  {
+    author: {
+      name: string;
+      avatar: string;
+    };
+    content: string;
+    isAnswered: boolean;
+    isHighlighted: boolean;
+  }
+>;
+
+type Question = {
+  id: string;
+  author: {
+    name: string;
+    avatar: string;
+  };
+  content: string;
+  isAnswered: boolean;
+  isHighlighted: boolean;
+};
+
 type RoomParams = {
   id: string;
 };
 
 export default function Room() {
+  const history = useHistory();
+
   const params = useParams<RoomParams>();
   const roomId = params.id;
 
   const { user } = useAuth();
 
   const [newQuestion, setNewQuestion] = React.useState('');
+  const [questions, setQuestions] = React.useState<Question[]>([]);
+  const [title, setTitle] = React.useState('');
+
+  React.useEffect(() => {
+    function handleRoomValueChange(room: firebase.database.DataSnapshot) {
+      const roomData = room.val();
+
+      if (!roomData) {
+        history.push('/');
+        return;
+      }
+
+      const firebaseQuestions: FirebaseQuestions = roomData.questions || {};
+
+      const parsedQuestions = Object.entries(firebaseQuestions).map(
+        ([key, value]) => ({
+          id: key,
+          content: value.content,
+          author: value.author,
+          isHighlighted: value.isHighlighted,
+          isAnswered: value.isAnswered,
+        })
+      );
+
+      setTitle(roomData.title);
+      setQuestions(parsedQuestions);
+    }
+
+    const roomRef = database.ref(`rooms/${roomId}`);
+    roomRef.once('value', handleRoomValueChange);
+
+    return () => {
+      roomRef.off('value', handleRoomValueChange);
+    };
+  }, [history, roomId]);
 
   async function handleSendQuestion(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -62,8 +123,14 @@ export default function Room() {
 
       <main>
         <div className="room-title">
-          <h1>Sala React Q&A</h1>
-          <span>4 perguntas</span>
+          <h1>Sala {title}</h1>
+          {questions.length > 0 && (
+            <span>
+              {questions.length === 1
+                ? '1 pergunta'
+                : `${questions.length} perguntas`}
+            </span>
+          )}
         </div>
 
         <form onSubmit={handleSendQuestion}>
