@@ -1,4 +1,5 @@
 import * as React from 'react';
+import cx from 'classnames';
 
 import 'styles/question.scss';
 
@@ -9,11 +10,25 @@ type QuestionProps = {
     name: string;
     avatar: string;
   };
+  isAnswered?: boolean;
+  isHighlighted?: boolean;
 };
 
-export default function Question({ author, content, children }: QuestionProps) {
+export default function Question({
+  children,
+  author,
+  content,
+  isAnswered = false,
+  isHighlighted = false,
+}: QuestionProps) {
   return (
-    <div className="question">
+    <div
+      className={cx(
+        'question',
+        { '--answered': isAnswered },
+        { '--highlighted': isHighlighted && !isAnswered }
+      )}
+    >
       <p>{content}</p>
 
       <footer>
@@ -22,7 +37,7 @@ export default function Question({ author, content, children }: QuestionProps) {
           <span>{author.name}</span>
         </div>
 
-        <div>{children}</div>
+        <div className="children-container">{children}</div>
       </footer>
     </div>
   );

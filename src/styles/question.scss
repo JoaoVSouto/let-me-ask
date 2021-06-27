@@ -4,9 +4,27 @@
   box-shadow: 0 2px 12px rgba($color: #000, $alpha: 0.04);
   padding: 1.5rem;
   margin-top: 2rem;
+  border: 1px solid transparent;
 
   + .question {
     margin-top: 0.5rem;
+  }
+
+  &.--highlighted {
+    background-color: #f4f0ff;
+    border-color: #835afd;
+
+    .user-info span {
+      color: #29292e;
+    }
+  }
+
+  &.--answered {
+    background-color: #dbdcdd;
+
+    .user-info img {
+      filter: grayscale(1);
+    }
   }
 
   p {
@@ -35,6 +53,11 @@
       margin-left: 0.5em;
       color: #737380;
       font-size: 0.875rem;
+    }
+
+    .children-container {
+      display: flex;
+      gap: 1rem;
     }
 
     button {
